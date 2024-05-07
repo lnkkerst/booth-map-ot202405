@@ -30,8 +30,7 @@ export default function Home() {
 
   return (
     <div>
-      <Map className="h-[500px]"></Map>
-      <div ref={latlngRef}>{JSON.stringify(latlng)}</div>
+      <Map className="h-screen"></Map>
     </div>
   );
 }

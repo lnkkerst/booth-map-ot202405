@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.booth-overlay {
+  width: fit-content !important;
+  height: fit-content !important;
+}
