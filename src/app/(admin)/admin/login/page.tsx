@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
         "card w-[90%] max-w-[720px] mt-36 bg-base-100 drop-shadow-md mx-auto",
       )}
     >
-      <div className="card-body ">
+      <div className="card-body">
         <div className="card-title">验证身份</div>
 
         <form className="form-control mt-4">
@@ -35,6 +35,7 @@ export default function AdminLoginPage() {
 
               try {
                 await loginMutation.mutateAsync({ password });
+                localStorage.setItem("token", password);
                 setRouting(true);
                 router.replace("/admin");
               } catch (e) {

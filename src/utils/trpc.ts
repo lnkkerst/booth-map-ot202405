@@ -2,22 +2,25 @@ import type { AppRouter } from "@/trpc/routers";
 import { createWSClient, TRPCClientError, wsLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 
-export const trpc = createTRPCNext<AppRouter>({
-  config(_opts) {
-    return {
-      links: [
-        wsLink({
-          client: createWSClient({
-            url: process.env.NODE_ENV === "production"
-              ? "/"
-              : "ws://localhost:3001",
+const createClient = () =>
+  createTRPCNext<AppRouter>({
+    config(_opts) {
+      return {
+        links: [
+          wsLink({
+            client: createWSClient({
+              url: process.env.NODE_ENV === "production"
+                ? "/"
+                : "ws://localhost:3001",
+            }),
           }),
-        }),
-      ],
-    };
-  },
-  ssr: false,
-});
+        ],
+      };
+    },
+    ssr: false,
+  });
+
+export const trpc = createClient();
 
 export function isTRPCClientError(
   cause: unknown,

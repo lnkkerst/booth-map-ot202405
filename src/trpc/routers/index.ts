@@ -70,11 +70,22 @@ export const appRouter = router({
     }),
 
   updateBooths: publicProcedure
-    .input(BoothZod.partial().required({ id: true }))
+    .input(
+      z.object({
+        data: BoothZod.partial().required({ id: true }),
+        password: z.string(),
+      }),
+    )
     .output(BoothZod)
     .mutation(async ({ input }) => {
-      const { id, ...data } = input;
-      const booth = await updateBooths(id, data);
+      const { password, data } = input;
+      if (password !== process.env["ADMIN_PASSWORD"]) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+        });
+      }
+      const { id, ...extraData } = data;
+      const booth = await updateBooths(id, extraData);
       ee.emit("update", booth);
       return booth;
     }),

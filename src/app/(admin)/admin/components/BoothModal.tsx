@@ -37,16 +37,15 @@ export const BoothModal = forwardRef<HTMLDialogElement, BoothModalProps>(
 
     async function handleSubmit(e: MouseEvent) {
       e.preventDefault();
-      await boothMutation.mutateAsync(form);
+      await boothMutation.mutateAsync({
+        data: form,
+        password: localStorage.getItem("token")!,
+      });
       onUpdated?.(form);
     }
 
     return (
-      <dialog
-        ref={ref}
-        className="modal"
-        {...extraProps}
-      >
+      <dialog ref={ref} className="modal" {...extraProps}>
         <div className="modal-box">
           <h3 className="font-bold text-lg">修改信息</h3>
 
@@ -74,10 +73,7 @@ export const BoothModal = forwardRef<HTMLDialogElement, BoothModalProps>(
           </form>
 
           <div className="modal-action justify-between">
-            <button
-              className="btn btn-primary w-20"
-              onClick={handleSubmit}
-            >
+            <button className="btn btn-primary w-20" onClick={handleSubmit}>
               {boothMutation.isPending
                 ? <span className="loading loading-spinner"></span>
                 : <span>提交</span>}

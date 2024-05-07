@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { ReactNode } from "react";
 import { MdOpenInNew } from "react-icons/md";
+import { LoginChecker } from "./components/LoginChecker";
 
 export type AdminLayoutProps = {
   children?: ReactNode;
@@ -10,6 +11,7 @@ export type AdminLayoutProps = {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <>
+      <LoginChecker></LoginChecker>
       <header className={clsx("navbar", "shadow")}>
         <div className="flex-1">
           <Link
