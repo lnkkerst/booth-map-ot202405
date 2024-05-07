@@ -5,13 +5,12 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import xlsBaiduMap from "@/assets/images/xls-baidumap.png";
 import { boothsAtom, useUpdateBooths } from "@/atoms/booth";
 import { mapAtom } from "@/atoms/map";
-import { Booth } from "@/schemas/booth";
 import { trpc } from "@/utils/trpc";
 import clsx from "clsx";
 import { useAtom, useSetAtom } from "jotai";
 import { CRS, DivIcon, LatLng, LatLngBounds } from "leaflet";
 import { memo, useMemo } from "react";
-import { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import { ComponentPropsWithoutRef, useEffect } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker } from "react-leaflet";
 import styles from "./Map.module.css";
@@ -61,7 +60,9 @@ export function Map({ ...extraProps }: MapProps) {
   return (
     <div>
       <MapContainer
-        zoom={0}
+        zoom={1}
+        zoomSnap={0}
+        zoomDelta={0.25}
         center={center}
         crs={CRS.Simple}
         minZoom={0}
