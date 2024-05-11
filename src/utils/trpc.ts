@@ -11,7 +11,7 @@ import { NextPageContext } from "next";
 
 function getProdWsEndpoint() {
   let protocol = "ws";
-  if (window.location.protocol === "https") {
+  if (window.location.protocol === "https:") {
     protocol = "wss";
   }
   let host = window.location.host;

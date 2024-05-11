@@ -18,13 +18,16 @@ export const BoothCardModal = forwardRef<
       {...extraProps}
     >
       <div className="absolute bottom-20 w-[90%] max-w-sm mx-auto card card-side bg-base-100">
-        <figure>
-          <Image
-            src={booth?.card?.cover ?? "https://http.cat/404"}
-            alt="Cover"
-            className="w-40"
-          />
-        </figure>
+        {booth
+          && (
+            <figure>
+              <Image
+                src={booth?.card?.cover ?? "https://http.cat/404"}
+                alt="Cover"
+                className="w-40"
+              />
+            </figure>
+          )}
         <div className="card-body">
           <h2 className="card-title">{booth?.name}</h2>
           <p>{booth?.card?.info}</p>
