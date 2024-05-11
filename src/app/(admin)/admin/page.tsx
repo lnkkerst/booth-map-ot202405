@@ -12,6 +12,9 @@ export default function AdminPage() {
   const [currentBooth, setCurrentBooth] = useState<Booth>();
   const [booths, setBooths] = useAtom(boothsAtom);
   const updateBooths = useUpdateBooths();
+  const activeCountQuery = trpc.active.useQuery(undefined, {
+    refetchInterval: 10000,
+  });
 
   useEffect(() => {
     if (boothsQuery.data) {
@@ -68,6 +71,13 @@ export default function AdminPage() {
           ))}
         </tbody>
       </table>
+
+      <div className="flex items-center justify-center mt-4 text-gray-600 text-sm">
+        当前在线人数：
+        {activeCountQuery.data
+          ? <span>{activeCountQuery.data}</span>
+          : <span className="loading loading-spinner loading-xs"></span>}
+      </div>
 
       <BoothModal
         booth={currentBooth}

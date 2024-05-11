@@ -1,4 +1,5 @@
 import { Booth, BoothZod } from "@/schemas/booth";
+import { getWss } from "@/server/wss";
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { EventEmitter } from "events";
@@ -142,6 +143,11 @@ export const appRouter = router({
         code: "UNAUTHORIZED",
       });
     }
+  }),
+
+  active: publicProcedure.input(z.void()).output(z.number()).query(async () => {
+    const wss = getWss();
+    return wss.clients.size;
   }),
 });
 

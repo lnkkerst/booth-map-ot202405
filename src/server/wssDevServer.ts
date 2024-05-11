@@ -2,6 +2,7 @@ import { appRouter } from "@/trpc/routers";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import * as dotenv from "dotenv";
 import { WebSocketServer } from "ws";
+import { globalForWss } from "./wss";
 
 dotenv.config({
   path: [".env.local", ".env"],
@@ -10,6 +11,7 @@ dotenv.config({
 const wss = new WebSocketServer({
   port: 3001,
 });
+globalForWss.wss = wss;
 const handler = applyWSSHandler({ wss, router: appRouter });
 
 wss.on("connection", ws => {
