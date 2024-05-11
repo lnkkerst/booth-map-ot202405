@@ -21,8 +21,8 @@ export const BoothCardModal = forwardRef<
         {booth
           && (
             <figure>
-              <Image
-                src={booth?.card?.cover ?? "https://http.cat/404"}
+              <img
+                src={booth.card.cover}
                 alt="Cover"
                 className="w-40"
               />
