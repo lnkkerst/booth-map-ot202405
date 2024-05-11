@@ -1,5 +1,6 @@
 import { Booth } from "@/schemas/booth";
 import clsx from "clsx";
+import Image from "next/image";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 
 export type BoothCardModalProps = ComponentPropsWithoutRef<"dialog"> & {
@@ -18,8 +19,8 @@ export const BoothCardModal = forwardRef<
     >
       <div className="absolute bottom-20 w-[90%] max-w-sm mx-auto card card-side bg-base-100">
         <figure>
-          <img
-            src={booth?.card?.cover}
+          <Image
+            src={booth?.card?.cover ?? "https://http.cat/404"}
             alt="Cover"
             className="w-40"
           />
