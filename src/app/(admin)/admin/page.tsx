@@ -35,6 +35,7 @@ export default function AdminPage() {
           <tr>
             <th>展台</th>
             <th>人数</th>
+            <th>等待时间（分钟）</th>
           </tr>
         </thead>
 
@@ -49,7 +50,20 @@ export default function AdminPage() {
               }}
             >
               <td>{booth.name}</td>
-              <td>{booth.count}</td>
+              <td>
+                {booth.show === "count"
+                  ? (
+                    booth.count
+                  )
+                  : <span className="text-gray-600 italic">不显示</span>}
+              </td>
+              <td>
+                {booth.show === "minutes"
+                  ? (
+                    booth.minutes
+                  )
+                  : <span className="text-gray-600 italic">不显示</span>}
+              </td>
             </tr>
           ))}
         </tbody>

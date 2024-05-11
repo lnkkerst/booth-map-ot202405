@@ -6,14 +6,22 @@ import xlsBaiduMap from "@/assets/images/xls-baidumap.png";
 import xlsMap from "@/assets/images/xls-map-v1.png";
 import { boothsAtom, useUpdateBooths } from "@/atoms/booth";
 import { mapAtom } from "@/atoms/map";
+import { Booth } from "@/schemas/booth";
 import { trpc } from "@/utils/trpc";
 import clsx from "clsx";
 import { useAtom, useSetAtom } from "jotai";
-import { CRS, DivIcon, LatLng, LatLngBounds } from "leaflet";
-import { memo, useMemo } from "react";
+import {
+  CRS,
+  DivIcon,
+  LatLng,
+  LatLngBounds,
+  LeafletMouseEventHandlerFn,
+} from "leaflet";
+import { memo, useMemo, useRef, useState } from "react";
 import { ComponentPropsWithoutRef, useEffect } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker } from "react-leaflet";
+import { BoothCardModal } from "./BoothCardModal";
 import styles from "./Map.module.css";
 
 export type MapProps = ComponentPropsWithoutRef<"div">;
@@ -21,16 +29,51 @@ export type MapProps = ComponentPropsWithoutRef<"div">;
 const MemoImageOverlay = memo(ImageOverlay);
 
 export function Map({ className, ...extraProps }: MapProps) {
-  const setMap = useSetAtom(mapAtom);
+  const [map, setMap] = useAtom(mapAtom);
   const [booths, setBooths] = useAtom(boothsAtom);
   const boothsQuery = trpc.getBooths.useQuery();
   const extraZoom = 0.3;
+  const [selectedBooth, setSelectedBooth] = useState<Booth | undefined>(
+    undefined,
+  );
+  const boothCardModalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (boothsQuery.data) {
       setBooths(boothsQuery.data);
     }
   }, [boothsQuery.data, setBooths]);
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+    const onClick: LeafletMouseEventHandlerFn = e => {
+      let el = e.originalEvent.target;
+      let isMarker = false;
+      for (let i = 1; i <= 5; ++i) {
+        if (el instanceof HTMLElement) {
+          if (el.classList.contains("markder-container")) {
+            isMarker = true;
+            break;
+          }
+          if (el.parentElement) {
+            el = el.parentElement;
+          }
+        }
+      }
+      if (!isMarker) {
+        return;
+      }
+      if (el instanceof HTMLElement && el.dataset.boothIndex) {
+        const index = Number.parseInt(el.dataset.boothIndex);
+        setSelectedBooth(booths[index]);
+        boothCardModalRef.current?.showModal();
+      }
+    };
+    map.on("click", onClick);
+    return () => void map.off("click", onClick);
+  });
 
   const imgFile = xlsMap;
 
@@ -74,7 +117,7 @@ export function Map({ className, ...extraProps }: MapProps) {
       >
         <MemoImageOverlay url={url} bounds={bounds}></MemoImageOverlay>
 
-        {booths.map(booth => (
+        {booths.map((booth, index) => (
           <Marker
             position={[
               booth.position.y * extraZoom,
@@ -86,21 +129,43 @@ export function Map({ className, ...extraProps }: MapProps) {
                   className={clsx(
                     "relative translate-x-[-50%] translate-y-[calc(-100%_-_8px)] w-20",
                     "flex flex-col items-center justify-center",
+                    "markder-container",
                   )}
+                  data-booth-index={index}
                 >
                   <div
                     className={clsx(
-                      "w-16 h-16",
+                      "w-[4.5rem] h-[4.5rem]",
                       styles.bubble,
                       "bg-white drop-shadow-[0px_0px_2px_#444] after:!border-t-white",
-                      "rounded-md",
+                      "rounded-full",
                       "flex items-center justify-center",
                     )}
                   >
-                    <span className="text-gray-700 font-bold text-xl">
-                      {booth.count}
-                    </span>
-                    <span className="text-gray-500 font-medium text-xs"></span>
+                    {booth.show === "count"
+                      ? (
+                        <>
+                          <span className="text-gray-700 font-bold text-xl">
+                            {booth.count}
+                          </span>
+                          <span className="text-gray-500 font-medium text-xs">
+                            人
+                          </span>
+                        </>
+                      )
+                      : (
+                        <div>
+                          <div className="text-gray-500 font-medium text-xs">
+                            等待
+                          </div>
+                          <div className="text-gray-700 font-bold text-xl">
+                            {booth.minutes}
+                          </div>
+                          <div className="text-gray-500 font-medium text-xs">
+                            分钟
+                          </div>
+                        </div>
+                      )}
                   </div>
 
                   <div
@@ -121,6 +186,9 @@ export function Map({ className, ...extraProps }: MapProps) {
           </Marker>
         ))}
       </MapContainer>
+
+      <BoothCardModal booth={selectedBooth} ref={boothCardModalRef}>
+      </BoothCardModal>
     </div>
   );
 }

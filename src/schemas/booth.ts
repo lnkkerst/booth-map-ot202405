@@ -6,6 +6,12 @@ export const BoothZod = z.object({
   name: z.string(),
   position: PositionZod,
   count: z.number(),
+  minutes: z.number(),
+  show: z.enum(["count", "minutes"]),
+  card: z.object({
+    cover: z.string(),
+    info: z.string(),
+  }),
 });
 
 export type Booth = z.infer<typeof BoothZod>;

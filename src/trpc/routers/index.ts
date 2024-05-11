@@ -15,6 +15,12 @@ const booths: Booth[] = [
       y: 0,
     },
     count: 100,
+    minutes: 10,
+    show: "count",
+    card: {
+      cover: "https://http.cat/404",
+      info: "just for test",
+    },
   },
   {
     id: "test2",
@@ -24,6 +30,12 @@ const booths: Booth[] = [
       y: 200,
     },
     count: 100,
+    minutes: 10,
+    show: "count",
+    card: {
+      cover: "https://http.cat/404",
+      info: "just for test",
+    },
   },
   {
     id: "test3",
@@ -33,6 +45,27 @@ const booths: Booth[] = [
       y: 540,
     },
     count: 100,
+    minutes: 10,
+    show: "count",
+    card: {
+      cover: "https://http.cat/404",
+      info: "just for test",
+    },
+  },
+  {
+    id: "test4",
+    name: "测试展台4",
+    position: {
+      x: 883,
+      y: 654,
+    },
+    count: 100,
+    minutes: 10,
+    show: "count",
+    card: {
+      cover: "https://http.cat/404",
+      info: "just for test",
+    },
   },
 ];
 
