@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import xlsBaiduMap from "@/assets/images/xls-baidumap.png";
+import xlsMap from "@/assets/images/xls-map-v1.png";
 import { boothsAtom, useUpdateBooths } from "@/atoms/booth";
 import { mapAtom } from "@/atoms/map";
 import { trpc } from "@/utils/trpc";
@@ -19,7 +20,7 @@ export type MapProps = ComponentPropsWithoutRef<"div">;
 
 const MemoImageOverlay = memo(ImageOverlay);
 
-export function Map({ ...extraProps }: MapProps) {
+export function Map({ className, ...extraProps }: MapProps) {
   const setMap = useSetAtom(mapAtom);
   const [booths, setBooths] = useAtom(boothsAtom);
   const boothsQuery = trpc.getBooths.useQuery();
@@ -31,7 +32,7 @@ export function Map({ ...extraProps }: MapProps) {
     }
   }, [boothsQuery.data, setBooths]);
 
-  const imgFile = xlsBaiduMap;
+  const imgFile = xlsMap;
 
   const url = useMemo(() => imgFile.src, [imgFile.src]);
   const width = useMemo(() => imgFile.width * extraZoom, [imgFile.width]);
@@ -68,6 +69,7 @@ export function Map({ ...extraProps }: MapProps) {
         minZoom={0}
         attributionControl={false}
         ref={setMap as any}
+        className={clsx("!bg-[#fff5e2]", className)}
         {...extraProps}
       >
         <MemoImageOverlay url={url} bounds={bounds}></MemoImageOverlay>
