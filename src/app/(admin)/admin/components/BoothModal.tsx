@@ -74,7 +74,7 @@ export const BoothModal = forwardRef<HTMLDialogElement, BoothModalProps>(
 
           <div className="modal-action justify-between">
             <button className="btn btn-primary w-20" onClick={handleSubmit}>
-              {boothMutation.isPending
+              {boothMutation.isLoading
                 ? <span className="loading loading-spinner"></span>
                 : <span>提交</span>}
             </button>

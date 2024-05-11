@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
               }
             }}
           >
-            {loginMutation.isPending || routing
+            {loginMutation.isLoading || routing
               ? <span className="loading loading-spinner"></span>
               : <span>登录</span>}
           </button>
