@@ -2,14 +2,14 @@
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import xlsBaiduMap from "@/assets/images/xls-baidumap.png";
 import xlsMap from "@/assets/images/xls-map-v1.png";
 import { boothsAtom, useUpdateBooths } from "@/atoms/booth";
 import { mapAtom } from "@/atoms/map";
 import { Booth } from "@/schemas/booth";
 import { trpc } from "@/utils/trpc";
+import { Transition } from "@headlessui/react";
 import clsx from "clsx";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import {
   CRS,
   DivIcon,
@@ -21,6 +21,7 @@ import { memo, useMemo, useRef, useState } from "react";
 import { ComponentPropsWithoutRef, useEffect } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker } from "react-leaflet";
+import { BoothCard } from "./BoothCard";
 import { BoothCardModal } from "./BoothCardModal";
 import styles from "./Map.module.css";
 
@@ -36,7 +37,7 @@ export function Map({ className, ...extraProps }: MapProps) {
   const [selectedBooth, setSelectedBooth] = useState<Booth | undefined>(
     undefined,
   );
-  const boothCardModalRef = useRef<HTMLDialogElement>(null);
+  const [showCard, setShowCard] = useState(false);
 
   useEffect(() => {
     if (boothsQuery.data) {
@@ -68,7 +69,7 @@ export function Map({ className, ...extraProps }: MapProps) {
       if (el instanceof HTMLElement && el.dataset.boothIndex) {
         const index = Number.parseInt(el.dataset.boothIndex);
         setSelectedBooth(booths[index]);
-        boothCardModalRef.current?.showModal();
+        setShowCard(true);
       }
     };
     map.on("click", onClick);
@@ -137,7 +138,7 @@ export function Map({ className, ...extraProps }: MapProps) {
                     className={clsx(
                       "w-[4.5rem] h-[4.5rem]",
                       styles.bubble,
-                      "bg-white drop-shadow-[0px_0px_2px_#444] after:!border-t-white",
+                      "bg-white/80 11drop-shadow-[0px_0px_2px_#444] after:!border-t-white",
                       "rounded-full",
                       "flex items-center justify-center",
                     )}
@@ -187,8 +188,27 @@ export function Map({ className, ...extraProps }: MapProps) {
         ))}
       </MapContainer>
 
-      <BoothCardModal booth={selectedBooth} ref={boothCardModalRef}>
-      </BoothCardModal>
+      <Transition
+        show={showCard}
+        enter="transition-opacity duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-150"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div
+          className={clsx("fixed bottom-10 left-0 w-full mx-auto z-[9999]")}
+        >
+          <BoothCard
+            showClose={true}
+            booth={selectedBooth}
+            className="mx-auto w-[90%] max-w-[720px] shadow-xl"
+            onClose={() => setShowCard(false)}
+          >
+          </BoothCard>
+        </div>
+      </Transition>
     </div>
   );
 }
