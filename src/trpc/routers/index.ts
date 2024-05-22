@@ -1,90 +1,11 @@
 import { Booth, BoothZod } from "@/schemas/booth";
 import { getWss } from "@/server/wss";
+import { getBooths, updateBooths } from "@/utils/booth";
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { EventEmitter } from "events";
-import { merge } from "lodash-es";
 import { z } from "zod";
 import { publicProcedure, router } from "..";
-
-const booths: Booth[] = [
-  {
-    id: "test1",
-    name: "测试展台1",
-    position: {
-      x: 0,
-      y: 0,
-    },
-    count: 100,
-    minutes: 10,
-    show: "count",
-    card: {
-      cover: "https://http.cat/404",
-      info: "just for test",
-    },
-  },
-  {
-    id: "test2",
-    name: "测试展台2",
-    position: {
-      x: 200,
-      y: 200,
-    },
-    count: 100,
-    minutes: 10,
-    show: "count",
-    card: {
-      cover: "https://http.cat/404",
-      info: "just for test",
-    },
-  },
-  {
-    id: "test3",
-    name: "测试展台3",
-    position: {
-      x: 632,
-      y: 540,
-    },
-    count: 100,
-    minutes: 10,
-    show: "count",
-    card: {
-      cover: "https://http.cat/404",
-      info: "just for test",
-    },
-  },
-  {
-    id: "test4",
-    name: "测试展台4",
-    position: {
-      x: 883,
-      y: 654,
-    },
-    count: 100,
-    minutes: 10,
-    show: "count",
-    card: {
-      cover: "https://http.cat/404",
-      info: "just for test",
-    },
-  },
-];
-
-async function getBooths() {
-  return booths;
-}
-
-async function updateBooths(id: string, data: Partial<Booth>) {
-  const booth = booths.find(booth => booth.id === id);
-  if (!booth) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: `Booth with id ${id} not found`,
-    });
-  }
-  merge(booth, data);
-  return booth;
-}
 
 const ee = new EventEmitter();
 
