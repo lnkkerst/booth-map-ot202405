@@ -1,17 +1,21 @@
 "use client";
 
 import { trpc } from "@/utils/trpc";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export function LoginChecker() {
   const mutation = trpc.auth.useMutation();
   const router = useRouter();
+  const pathname = usePathname();
   useEffect(() => {
     const fn = async () => {
       const token = localStorage.getItem("token");
       if (
         !await (async () => {
+          if (pathname?.endsWith("login")) {
+            return true;
+          }
           if (!token) {
             return false;
           }
@@ -30,6 +34,6 @@ export function LoginChecker() {
     };
 
     fn();
-  }, [mutation, router]);
+  }, [mutation, router, pathname]);
   return <></>;
 }
