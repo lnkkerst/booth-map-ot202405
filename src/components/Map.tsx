@@ -2,7 +2,7 @@
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import xlsMap from "@/assets/images/xls-map-v1.png";
+// import xlsMap from "@/assets/images/xls-map-v1.png";
 import { boothsAtom, useUpdateBooths } from "@/atoms/booth";
 import { mapAtom } from "@/atoms/map";
 import { Booth } from "@/schemas/booth";
@@ -17,12 +17,11 @@ import {
   LatLngBounds,
   LeafletMouseEventHandlerFn,
 } from "leaflet";
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { ComponentPropsWithoutRef, useEffect } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker } from "react-leaflet";
 import { BoothCard } from "./BoothCard";
-import { BoothCardModal } from "./BoothCardModal";
 import styles from "./Map.module.css";
 
 export type MapProps = ComponentPropsWithoutRef<"div">;
@@ -33,7 +32,7 @@ export function Map({ className, ...extraProps }: MapProps) {
   const [map, setMap] = useAtom(mapAtom);
   const [booths, setBooths] = useAtom(boothsAtom);
   const boothsQuery = trpc.getBooths.useQuery();
-  const extraZoom = 0.3;
+  const extraZoom = 0.1;
   const [selectedBooth, setSelectedBooth] = useState<Booth | undefined>(
     undefined,
   );
@@ -76,13 +75,16 @@ export function Map({ className, ...extraProps }: MapProps) {
     return () => void map.off("click", onClick);
   });
 
-  const imgFile = xlsMap;
-
-  const url = useMemo(() => imgFile.src, [imgFile.src]);
-  const width = useMemo(() => imgFile.width * extraZoom, [imgFile.width]);
-  const height = useMemo(() => imgFile.height * extraZoom, [imgFile.height]);
+  // const imgFile = xlsMap;
+  //
+  // const url = useMemo(() => imgFile.src, [imgFile.src]);
+  // const width = useMemo(() => imgFile.width * extraZoom, [imgFile.width]);
+  // const height = useMemo(() => imgFile.height * extraZoom, [imgFile.height]);
+  const url = "https://s21.ax1x.com/2024/05/28/pk1he0S.jpg";
+  const width = 4096 * extraZoom;
+  const height = 4096 * extraZoom;
   const center = useMemo(
-    () => new LatLng(height / 2, width / 2),
+    () => new LatLng(height / 3, width / 3),
     [width, height],
   );
   const bounds = useMemo(
@@ -138,7 +140,7 @@ export function Map({ className, ...extraProps }: MapProps) {
                     className={clsx(
                       "w-[4.5rem] h-[4.5rem]",
                       styles.bubble,
-                      "bg-white/80 11drop-shadow-[0px_0px_2px_#444] after:!border-t-white",
+                      "bg-white/80 after:!border-t-white",
                       "rounded-full",
                       "flex items-center justify-center",
                     )}
@@ -172,7 +174,7 @@ export function Map({ className, ...extraProps }: MapProps) {
                   <div
                     className={clsx(
                       "absolute top-[calc(100%_+_10px)] bg-black/40 text-white px-2 py-1",
-                      "mx-auto rounded-md",
+                      "mx-auto rounded-md text-center",
                     )}
                   >
                     {booth.name}

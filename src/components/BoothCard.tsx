@@ -22,11 +22,11 @@ export function BoothCard({
       {...extraProps}
     >
       {booth && (
-        <figure>
-          <img src={booth.card.cover} alt="Cover" className="w-40" />
+        <figure className="basis-1/3 pl-4">
+          <img src={booth.card.cover} alt="Cover" className="w-full" />
         </figure>
       )}
-      <div className="card-body">
+      <div className="card-body flex-1 p-4">
         <h2 className="card-title">{booth?.name}</h2>
         <p>{booth?.card?.info}</p>
       </div>
