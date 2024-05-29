@@ -34,6 +34,6 @@ export function LoginChecker() {
     };
 
     fn();
-  }, [mutation, router, pathname]);
+  }, [router, pathname]);
   return <></>;
 }
