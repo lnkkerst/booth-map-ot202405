@@ -8,7 +8,7 @@ const defaultData: Data = {
   booths: [
     {
       id: "1",
-      name: "水拓DIY",
+      name: "无法复刻的青春",
       count: 0,
       minutes: 0,
       card: {
@@ -21,7 +21,7 @@ const defaultData: Data = {
     },
     {
       id: "2",
-      name: "飞行日记",
+      name: "放飞你的青春",
       count: 0,
       minutes: 0,
       card: {
@@ -34,7 +34,7 @@ const defaultData: Data = {
     },
     {
       id: "3",
-      name: "带走你的学士帽",
+      name: "拿走你的学士帽",
       count: 0,
       minutes: 0,
       card: {
